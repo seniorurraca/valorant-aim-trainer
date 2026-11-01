@@ -1,6 +1,7 @@
 import { createScene } from './engine/scene.js';
 import { createAimControls } from './engine/aimControls.js';
 import { createSession } from './game/session.js';
+import { getHighScore, submitScore } from './game/highScores.js';
 import { MODES } from './modes/index.js';
 import { initSensitivityPanel } from './ui/sensitivityPanel.js';
 import { createHud, formatResult } from './ui/hud.js';
@@ -20,6 +21,16 @@ let session = null;
 
 Object.entries(MODES).forEach(([id, mode]) => modeSelect.add(new Option(mode.label, id)));
 
+function showHighScore() {
+  const best = getHighScore(modeSelect.value, durationSelect.value);
+  $('high-score').textContent = `Récord: ${best === null ? '—' : `${best} ${MODES[modeSelect.value].scoreUnit}`}`;
+}
+
+function onSelectionChange() {
+  discardSession();
+  showHighScore();
+}
+
 function discardSession() {
   session?.end();
   session = null;
@@ -37,8 +48,11 @@ function startSession() {
 }
 
 function finishSession() {
-  $('results').textContent = `Resultado — ${formatResult(session.result())}`;
+  const result = session.result();
+  const isRecord = submitScore(modeSelect.value, durationSelect.value, result.score);
+  $('results').textContent = `Resultado — ${formatResult(result)}${isRecord ? ' · ¡Nuevo récord!' : ''}`;
   discardSession();
+  showHighScore();
   controls.unlock();
 }
 
@@ -47,8 +61,9 @@ startButton.addEventListener('click', () => {
   controls.lock();
 });
 
-modeSelect.addEventListener('change', discardSession);
-durationSelect.addEventListener('change', discardSession);
+modeSelect.addEventListener('change', onSelectionChange);
+durationSelect.addEventListener('change', onSelectionChange);
+showHighScore();
 
 document.addEventListener('pointerlockchange', () => {
   const locked = controls.isLocked();

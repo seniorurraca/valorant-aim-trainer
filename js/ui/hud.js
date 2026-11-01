@@ -1,10 +1,12 @@
+import { percent } from '../utils/format.js';
+
 const $ = (id) => document.getElementById(id);
-const percent = (ratio) => `${Math.round(ratio * 100)}%`;
 
 export function formatResult(result) {
-  return result.kind === 'tracking'
+  const base = result.kind === 'tracking'
     ? `En objetivo: ${percent(result.onTargetRatio)}`
     : `Hits: ${result.hits} · Precisión: ${percent(result.accuracy)} · ${result.hitsPerSecond.toFixed(2)} hits/s`;
+  return result.summary ? `${base} · ${result.summary}` : base;
 }
 
 export function createHud() {

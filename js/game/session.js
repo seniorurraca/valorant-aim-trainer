@@ -2,7 +2,7 @@ import { targetUnderCrosshair } from '../engine/targets.js';
 
 export function createSession({ mode, duration, camera }) {
   const stats = { shots: 0, hits: 0, onTargetTime: 0, elapsed: 0 };
-  mode.start();
+  mode.start?.();
 
   function update(dt) {
     stats.elapsed += dt;
@@ -21,13 +21,19 @@ export function createSession({ mode, duration, camera }) {
     mode.hit(target);
   }
 
-  const result = () => ({
-    kind: mode.kind,
-    hits: stats.hits,
-    accuracy: stats.shots ? stats.hits / stats.shots : 0,
-    hitsPerSecond: stats.elapsed ? stats.hits / stats.elapsed : 0,
-    onTargetRatio: stats.elapsed ? stats.onTargetTime / stats.elapsed : 0,
-  });
+  function result() {
+    const onTargetRatio = stats.elapsed ? stats.onTargetTime / stats.elapsed : 0;
+    const defaultScore = mode.kind === 'tracking' ? Math.round(onTargetRatio * 100) : stats.hits;
+    return {
+      kind: mode.kind,
+      hits: stats.hits,
+      accuracy: stats.shots ? stats.hits / stats.shots : 0,
+      hitsPerSecond: stats.elapsed ? stats.hits / stats.elapsed : 0,
+      onTargetRatio,
+      score: mode.score?.() ?? defaultScore,
+      summary: mode.summary?.(),
+    };
+  }
 
   return {
     update,

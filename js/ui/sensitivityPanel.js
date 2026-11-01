@@ -1,15 +1,16 @@
 import { VALORANT, cmPer360 } from '../config/valorant.js';
 import { parseSensitivity } from '../sensitivity/iniParser.js';
-import { loadSettings, saveSettings } from '../sensitivity/storage.js';
+import { readJson, writeJson } from '../storage.js';
 
 const $ = (id) => document.getElementById(id);
+const SETTINGS_KEY = 'valorant-aim:settings';
 
 export function initSensitivityPanel() {
   const sensInput = $('sens');
   const dpiInput = $('dpi');
   const status = $('load-status');
 
-  const saved = loadSettings();
+  const saved = readJson(SETTINGS_KEY);
   if (saved) {
     sensInput.value = saved.sensitivity;
     dpiInput.value = saved.dpi;
@@ -23,7 +24,7 @@ export function initSensitivityPanel() {
     $('sens-info').textContent = sensitivity && dpi
       ? `${(sensitivity * VALORANT.degreesPerCount).toFixed(4)}°/count · ${cmPer360(sensitivity, dpi).toFixed(1)} cm/360°`
       : '';
-    saveSettings({ sensitivity, dpi });
+    writeJson(SETTINGS_KEY, { sensitivity, dpi });
   }
 
   async function loadFromFile(file) {

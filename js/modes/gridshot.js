@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { EYE_HEIGHT } from '../config/world.js';
 import { createTargetSet } from '../engine/targets.js';
 
 const DISTANCE = 12;
@@ -7,7 +8,7 @@ const RADIUS = 0.45;
 const ACTIVE_TARGETS = 3;
 
 const CELLS = [-2, -1, 0, 1, 2].flatMap((x) => [0, 1, 2].map((y) =>
-  new THREE.Vector3(x * SPACING, 1.6 + (y - 1) * SPACING, -DISTANCE)));
+  new THREE.Vector3(x * SPACING, EYE_HEIGHT + (y - 1) * SPACING, -DISTANCE)));
 
 export function createGridshot(scene) {
   const targets = createTargetSet(scene);

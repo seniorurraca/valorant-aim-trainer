@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 const TARGET_COLOR = 0xff4655;
-const sphere = new THREE.SphereGeometry(1, 32, 16);
+const sphere = new THREE.SphereGeometry(1, 31, 15);
 const raycaster = new THREE.Raycaster();
 const SCREEN_CENTER = new THREE.Vector2(0, 0);
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { VALORANT } from '../config/valorant.js';
+import { EYE_HEIGHT } from '../config/world.js';
 
-const EYE_HEIGHT = 1.6;
 const ROOM_SIZE = 60;
 const ROOM_HEIGHT = 20;
 

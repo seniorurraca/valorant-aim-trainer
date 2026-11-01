@@ -8,3 +8,7 @@ const CM_PER_INCH = 2.54;
 
 export const cmPer360 = (sensitivity, dpi) =>
   (360 / (sensitivity * VALORANT.degreesPerCount) / dpi) * CM_PER_INCH;
+
+export const AGENT_HEALTH = 150;
+
+export const VANDAL = { headDamage: 160, bodyDamage: 40 };
