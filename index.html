@@ -26,14 +26,14 @@
       <section>
         <h2>Sensibilidad</h2>
         <p class="hint">
-          Valorant guarda la sensibilidad en <code>%LOCALAPPDATA%\VALORANT\Saved\Config</code>
-          (no en la carpeta de instalación). Pega esa ruta en la barra de direcciones del diálogo.
+          Valorant guarda la sensibilidad en <code id="config-path">%LOCALAPPDATA%\VALORANT\Saved\Config</code>
+          (no en la carpeta de instalación). Copia la ruta, pégala en el campo "Nombre" del diálogo y presiona Enter.
+          Luego entra a la carpeta de tu cuenta (la modificada más reciente) → <code>Windows</code> → <code>RiotUserSettings.ini</code>.
         </p>
         <div class="row">
-          <button id="pick-folder" type="button">Elegir carpeta Config</button>
+          <button id="copy-path" type="button">Copiar ruta</button>
           <label class="button">Elegir RiotUserSettings.ini<input id="pick-file" type="file" accept=".ini" hidden></label>
         </div>
-        <select id="profiles" hidden></select>
         <p id="load-status" class="hint"></p>
         <div class="row">
           <label>Sens <input id="sens" type="number" step="0.001" min="0.001" value="0.5"></label>

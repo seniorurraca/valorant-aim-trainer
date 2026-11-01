@@ -1,5 +1,5 @@
 import { VALORANT, cmPer360 } from '../config/valorant.js';
-import { supportsDirectoryPicker, loadProfilesFromDirectory, loadProfileFromFile } from '../sensitivity/fileLoader.js';
+import { parseSensitivity } from '../sensitivity/iniParser.js';
 import { loadSettings, saveSettings } from '../sensitivity/storage.js';
 
 const $ = (id) => document.getElementById(id);
@@ -7,10 +7,7 @@ const $ = (id) => document.getElementById(id);
 export function initSensitivityPanel() {
   const sensInput = $('sens');
   const dpiInput = $('dpi');
-  const profilesSelect = $('profiles');
   const status = $('load-status');
-  const folderButton = $('pick-folder');
-  let profiles = [];
 
   const saved = loadSettings();
   if (saved) {
@@ -29,35 +26,28 @@ export function initSensitivityPanel() {
     saveSettings({ sensitivity, dpi });
   }
 
-  function applyProfile(profile) {
-    sensInput.value = profile.sensitivity;
+  async function loadFromFile(file) {
+    const sensitivity = parseSensitivity(await file.text());
+    if (!sensitivity) {
+      status.textContent = `No se encontró MouseSensitivity en ${file.name}.`;
+      return;
+    }
+    sensInput.value = sensitivity;
+    status.textContent = `Sensibilidad ${sensitivity} cargada de ${file.name}.`;
     refresh();
   }
 
-  function showProfiles(found) {
-    profiles = found;
-    profilesSelect.hidden = found.length < 2;
-    if (!found.length) {
-      status.textContent = 'No se encontró MouseSensitivity en esa ubicación.';
-      return;
+  async function copyConfigPath() {
+    try {
+      await navigator.clipboard.writeText($('config-path').textContent);
+      status.textContent = 'Ruta copiada.';
+    } catch {
+      status.textContent = 'No se pudo copiar; selecciona la ruta a mano.';
     }
-    profilesSelect.replaceChildren(...found.map((p, i) =>
-      new Option(`${p.label} — ${p.sensitivity} (${p.modified.toLocaleDateString()})`, i)));
-    status.textContent = found.length > 1
-      ? `${found.length} cuentas encontradas. Seleccionada la más reciente.`
-      : `Sensibilidad cargada de ${found[0].label}.`;
-    applyProfile(found[0]);
   }
 
-  function showError(error) {
-    if (error.name === 'AbortError') return;
-    status.textContent = `No se pudo leer la carpeta (${error.message}). Usa "Elegir RiotUserSettings.ini".`;
-  }
-
-  folderButton.hidden = !supportsDirectoryPicker();
-  folderButton.addEventListener('click', () => loadProfilesFromDirectory().then(showProfiles, showError));
-  $('pick-file').addEventListener('change', (e) => loadProfileFromFile(e.target.files[0]).then(showProfiles, showError));
-  profilesSelect.addEventListener('change', () => applyProfile(profiles[profilesSelect.value]));
+  $('copy-path').addEventListener('click', copyConfigPath);
+  $('pick-file').addEventListener('change', (e) => loadFromFile(e.target.files[0]));
   sensInput.addEventListener('input', refresh);
   dpiInput.addEventListener('input', refresh);
   refresh();

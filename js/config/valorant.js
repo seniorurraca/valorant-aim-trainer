@@ -1,7 +1,6 @@
 export const VALORANT = {
   degreesPerCount: 0.07,
   horizontalFov: 103,
-  settingsFileName: 'RiotUserSettings.ini',
   sensitivityKey: 'EAresFloatSettingName::MouseSensitivity',
 };
 
