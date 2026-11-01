@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Valorant Aim Trainer</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="crosshair"></div>
+
+  <div id="hud" hidden>
+    <span id="hud-time"></span>
+    <span id="hud-score"></span>
+    <span id="hud-raw"></span>
+  </div>
+
+  <div id="menu" class="overlay">
+    <div class="panel">
+      <h1>Valorant Aim Trainer</h1>
+
+      <section>
+        <h2>Sensibilidad</h2>
+        <p class="hint">
+          Valorant guarda la sensibilidad en <code>%LOCALAPPDATA%\VALORANT\Saved\Config</code>
+          (no en la carpeta de instalación). Pega esa ruta en la barra de direcciones del diálogo.
+        </p>
+        <div class="row">
+          <button id="pick-folder" type="button">Elegir carpeta Config</button>
+          <label class="button">Elegir RiotUserSettings.ini<input id="pick-file" type="file" accept=".ini" hidden></label>
+        </div>
+        <select id="profiles" hidden></select>
+        <p id="load-status" class="hint"></p>
+        <div class="row">
+          <label>Sens <input id="sens" type="number" step="0.001" min="0.001" value="0.5"></label>
+          <label>DPI <input id="dpi" type="number" step="50" min="50" value="800"></label>
+        </div>
+        <p id="sens-info" class="hint"></p>
+      </section>
+
+      <section>
+        <h2>Ejercicio</h2>
+        <div class="row">
+          <select id="mode"></select>
+          <select id="duration">
+            <option value="30">30 s</option>
+            <option value="60" selected>60 s</option>
+          </select>
+        </div>
+      </section>
+
+      <p id="results"></p>
+      <button id="start" class="primary" type="button">Jugar</button>
+      <p class="hint">Esc para pausar.</p>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
