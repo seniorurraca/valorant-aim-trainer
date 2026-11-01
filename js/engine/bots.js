@@ -8,7 +8,7 @@ const HEAD_CENTER_Y = BODY_CENTER_Y * 2 + HEAD_RADIUS;
 
 const bodyGeometry = new THREE.CapsuleGeometry(BODY_RADIUS, BODY_HEIGHT, 5, 13);
 const headGeometry = new THREE.SphereGeometry(HEAD_RADIUS, 23, 11);
-const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x6b5b95 });
+const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x9d8ad6 });
 const headMaterial = new THREE.MeshStandardMaterial({ color: 0xff4655, emissive: 0xff4655, emissiveIntensity: 0.3 });
 
 export function createBotSet(scene) {

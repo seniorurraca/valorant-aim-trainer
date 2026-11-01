@@ -27,10 +27,10 @@
         <h2>Sensibilidad</h2>
         <p class="hint">
           Valorant guarda la sensibilidad en <code id="config-path">%LOCALAPPDATA%\VALORANT\Saved\Config</code>
-          (no en la carpeta de instalación). Copia la ruta, pégala en el campo "Nombre" del diálogo y presiona Enter.
-          Luego entra a la carpeta de tu cuenta (la modificada más reciente) → <code>Windows</code> → <code>RiotUserSettings.ini</code>.
+          (no en la carpeta de instalación).
         </p>
         <div class="row">
+          <button id="open-guide" type="button">¿Cómo lo encuentro?</button>
           <button id="copy-path" type="button">Copiar ruta</button>
           <label class="button">Elegir RiotUserSettings.ini<input id="pick-file" type="file" accept=".ini" hidden></label>
         </div>
@@ -43,20 +43,35 @@
       </section>
 
       <section>
-        <h2>Ejercicio</h2>
-        <div class="row">
-          <select id="mode"></select>
+        <div class="section-header">
+          <h2>Ejercicio</h2>
           <select id="duration">
             <option value="30">30 s</option>
             <option value="60" selected>60 s</option>
           </select>
         </div>
-        <p id="high-score" class="hint"></p>
+        <div id="mode-cards" class="cards"></div>
       </section>
 
       <p id="results"></p>
       <button id="start" class="primary" type="button">Jugar</button>
       <p class="hint">Esc para pausar.</p>
+    </div>
+  </div>
+
+  <div id="guide" class="overlay" hidden>
+    <div class="panel">
+      <div class="section-header">
+        <h2>Cómo cargar tu sensibilidad</h2>
+        <button id="guide-close" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div id="guide-image" class="guide-image"></div>
+      <p id="guide-caption"></p>
+      <div class="section-header">
+        <button id="guide-prev" type="button">Anterior</button>
+        <span id="guide-step" class="hint"></span>
+        <button id="guide-next" type="button">Siguiente</button>
+      </div>
     </div>
   </div>
 

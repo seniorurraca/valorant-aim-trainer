@@ -1,7 +1,7 @@
 import { createTargetSet } from '../engine/targets.js';
-import { randomPointInView } from '../engine/spawn.js';
+import { randomPointOnWall } from '../engine/spawn.js';
 
-const VIEW = { distance: 12, maxYaw: 40, maxPitch: 20 };
+const AREA = { distance: 12, halfWidth: 7, minHeight: 0.8, maxHeight: 5 };
 const START_RADIUS = 0.6;
 const LIFETIME = 2;
 const SPAWN_INTERVAL = 0.6;
@@ -12,7 +12,7 @@ export function createReflex(scene) {
   let escaped = 0;
 
   function spawn() {
-    const target = targets.add(START_RADIUS, randomPointInView(VIEW));
+    const target = targets.add(START_RADIUS, randomPointOnWall(AREA));
     target.userData.age = 0;
   }
 

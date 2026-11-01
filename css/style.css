@@ -53,7 +53,7 @@ canvas { display: block; }
 .overlay[hidden], #hud[hidden] { display: none; }
 
 .panel {
-  width: min(520px, 100%);
+  width: min(680px, 100%);
   background: var(--panel);
   padding: 24px;
   border-radius: 8px;
@@ -90,3 +90,38 @@ select { max-width: 100%; }
 }
 
 #results { font-weight: 600; }
+
+.panel { max-height: calc(100vh - 32px); overflow-y: auto; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+button:disabled { opacity: 0.4; cursor: default; }
+
+.guide-image svg { display: block; width: 100%; height: auto; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+}
+
+.card img { display: block; width: 100%; aspect-ratio: 16 / 9; background: var(--bg); }
+.card-body { padding: 6px 8px 8px; }
+.card-title { font-weight: 700; font-size: 14px; }
+.card-text { color: var(--muted); font-size: 12px; margin: 2px 0; }
+.card-record { font-size: 12px; color: var(--text); }
+.card[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }

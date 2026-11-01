@@ -1,35 +1,26 @@
 import { createScene } from './engine/scene.js';
 import { createAimControls } from './engine/aimControls.js';
 import { createSession } from './game/session.js';
-import { getHighScore, submitScore } from './game/highScores.js';
+import { submitScore } from './game/highScores.js';
 import { MODES } from './modes/index.js';
 import { initSensitivityPanel } from './ui/sensitivityPanel.js';
+import { initFileGuide } from './ui/fileGuide.js';
+import { initModeCards } from './ui/modeCards.js';
+import { renderModePreviews } from './ui/modePreview.js';
 import { createHud, formatResult } from './ui/hud.js';
 
 const $ = (id) => document.getElementById(id);
 const canvas = $('game');
 const menu = $('menu');
 const startButton = $('start');
-const modeSelect = $('mode');
 const durationSelect = $('duration');
 
 const { scene, camera, render } = createScene(canvas);
 const { getSensitivity } = initSensitivityPanel();
+initFileGuide();
 const controls = createAimControls(camera, canvas, getSensitivity);
 const hud = createHud();
 let session = null;
-
-Object.entries(MODES).forEach(([id, mode]) => modeSelect.add(new Option(mode.label, id)));
-
-function showHighScore() {
-  const best = getHighScore(modeSelect.value, durationSelect.value);
-  $('high-score').textContent = `Récord: ${best === null ? '—' : `${best} ${MODES[modeSelect.value].scoreUnit}`}`;
-}
-
-function onSelectionChange() {
-  discardSession();
-  showHighScore();
-}
 
 function discardSession() {
   session?.end();
@@ -37,9 +28,16 @@ function discardSession() {
   startButton.textContent = 'Jugar';
 }
 
+const modeCards = initModeCards({
+  container: $('mode-cards'),
+  modes: MODES,
+  previews: renderModePreviews(MODES),
+  onSelect: discardSession,
+});
+
 function startSession() {
   session = createSession({
-    mode: MODES[modeSelect.value].create(scene),
+    mode: MODES[modeCards.getSelected()].create(scene),
     duration: Number(durationSelect.value),
     camera,
   });
@@ -49,10 +47,10 @@ function startSession() {
 
 function finishSession() {
   const result = session.result();
-  const isRecord = submitScore(modeSelect.value, durationSelect.value, result.score);
+  const isRecord = submitScore(modeCards.getSelected(), durationSelect.value, result.score);
   $('results').textContent = `Resultado — ${formatResult(result)}${isRecord ? ' · ¡Nuevo récord!' : ''}`;
   discardSession();
-  showHighScore();
+  modeCards.showRecords(durationSelect.value);
   controls.unlock();
 }
 
@@ -61,9 +59,11 @@ startButton.addEventListener('click', () => {
   controls.lock();
 });
 
-modeSelect.addEventListener('change', onSelectionChange);
-durationSelect.addEventListener('change', onSelectionChange);
-showHighScore();
+durationSelect.addEventListener('change', () => {
+  discardSession();
+  modeCards.showRecords(durationSelect.value);
+});
+modeCards.showRecords(durationSelect.value);
 
 document.addEventListener('pointerlockchange', () => {
   const locked = controls.isLocked();
